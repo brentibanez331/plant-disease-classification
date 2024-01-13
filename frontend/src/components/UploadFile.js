@@ -1,0 +1,143 @@
+import React, { useState, useRef, useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import './UploadFile.css'
+import axios from 'axios'
+import { ReactComponent as Loader } from '..\\public\\loader.svg'
+
+function UploadFile() {
+    const [selectedFile, setSelectedFile] = useState()
+    const [data, setData] = useState()
+    const [preview, setPreview] = useState()
+    const [image, setImage] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
+    const inputRef = useRef();
+
+    const handleDragOver = (event) => {
+        event.preventDefault();
+    };
+
+    const handleDrop = (event) => {
+        event.preventDefault()
+        const droppedFile = event.dataTransfer.files
+
+        setSelectedFile(droppedFile[0])
+    }
+
+    let confidence = 0;
+
+    const sendFile = async () => {
+        if (image) {
+            let formData = new FormData();
+            formData.append("file", selectedFile);
+            console.log('Sending request to:', process.env.REACT_APP_API_URL);
+
+            let res = await axios.post(process.env.REACT_APP_API_URL, formData);
+
+            if (res.status === 200) {
+                setData(res.data);
+            }
+            setIsLoading(false);
+        }
+    }
+
+    const clearData = () => {
+        setData(null);
+        setImage(false);
+        setSelectedFile(null);
+        setPreview(null);
+        setIsLoading(false);
+    }
+
+    useEffect(() => {
+        if (!selectedFile) {
+            setPreview(undefined);
+            return;
+        }
+        const objectURL = URL.createObjectURL(selectedFile);
+        setPreview(objectURL);
+    }, [selectedFile]);
+
+    useEffect(() => {
+        if (!preview) {
+            return;
+        }
+        setIsLoading(true);
+        sendFile();
+    }, [preview]);
+
+    const onSelectFile = (files) => {
+        if (!files || files.length === 0) {
+            setSelectedFile(undefined);
+            setImage(false);
+            setData(undefined);
+            return;
+        }
+        setSelectedFile(files[0]);
+        setData(undefined);
+        setImage(true);
+    }
+
+    if (data) {
+        confidence = (parseFloat(data.confidence) * 100).toFixed(2);
+    }
+
+    return (
+        <div className='upload-section'>
+            {preview && (
+                <div className="prediction">
+                    {preview && (
+                        <div className='uploads'>
+                            <img src={preview} alt='Uploaded' />
+                        </div>
+
+                    )}
+                    {isLoading && (
+                        <div className='processing'>
+                            <Loader className='spinner' />
+                            <p>Processing</p>
+                        </div>
+                    )}
+
+                    {data && (
+                        <div className='result-container'>
+                            <div className='label'>
+                                <p>Label:</p>
+                                <h4>{data.class}</h4>
+                            </div>
+                            <div className='conf'>
+                                <p>Confidence:</p>
+                                <h4>{confidence}%</h4>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            )}
+
+            {isLoading && (
+                <button className='clear-data-btn' onClick={clearData}><h3>CANCEL</h3></button>
+            )}
+
+            {data && (
+                <button className='clear-data-btn' onClick={clearData}><h3>CLEAR</h3></button>
+            )}
+
+            {!preview && (
+                <div>
+                    <input type='file' onChange={(e) => onSelectFile(e.target.files)} hidden ref={inputRef} />
+                    <button onClick={() => inputRef.current.click()}>
+                        <div className='file-upload' onDragOver={handleDragOver} onDrop={handleDrop}>
+                            <i className='fa-solid fa-arrow-up-from-bracket'></i>
+                            <h1 className='drag-and-drop'>Drag and Drop an Image of a Potato Plant Leaf</h1>
+                            <p>Or</p>
+                            <h1 className='choose-file'>Choose File</h1>
+                        </div>
+                    </button>
+                </div>
+            )}
+
+
+        </div>
+    )
+}
+
+export default UploadFile

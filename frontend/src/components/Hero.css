@@ -1,0 +1,41 @@
+.hero-container {
+    margin: 0 25%;
+    text-align: center;
+    align-items: center;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.hero-container h1 {
+    font-size: 60px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    margin-top: 30px;
+}
+
+@media(max-width: 920px) {
+    .hero-container {
+        margin: 0 10%;
+    }
+
+    .hero-container h1{
+        font-size: 50px;
+    }
+
+    .hero-container p{
+        font-size: 14px;
+    }
+}
+
+@media(max-width: 500px) {
+    .hero-container {
+        margin: 0 10px;
+    }
+
+    .hero-container h1{
+        font-size: 40px;
+    }
+
+    .hero-container p{
+        font-size: 12px;
+    }
+}
