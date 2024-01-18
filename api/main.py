@@ -38,8 +38,8 @@ def read_file_as_image(data) -> np.ndarray:
     return image
 
 
-@app.post("/predict")
-async def predict(
+@app.post("/predict-potato")
+async def predict_potato(
         file: UploadFile = File(...)
 ):
     image = read_file_as_image(await file.read())

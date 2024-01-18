@@ -1,5 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState, useRef, useEffect, useCallback } from 'react'
 import './UploadFile.css'
 import axios from 'axios'
 import { ReactComponent as Loader } from '..\\public\\loader.svg'
@@ -20,25 +19,39 @@ function UploadFile() {
         event.preventDefault()
         const droppedFile = event.dataTransfer.files
 
-        setSelectedFile(droppedFile[0])
+        setSelectedFile(droppedFile[0]);
+        setData(undefined);
+        setImage(true);
     }
 
     let confidence = 0;
 
-    const sendFile = async () => {
-        if (image) {
-            let formData = new FormData();
-            formData.append("file", selectedFile);
-            console.log('Sending request to:', process.env.REACT_APP_API_URL);
+    const makePostRequest = async () => {
+        try {
+            if (image) {
+                const endpointUrl = 'https://us-central1-future-graph-411205.cloudfunctions.net/predict';
+                let formData = new FormData();
+                formData.append("file", selectedFile)
 
-            let res = await axios.post(process.env.REACT_APP_API_URL, formData);
+                const response = await axios.post(endpointUrl, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
 
-            if (res.status === 200) {
-                setData(res.data);
+                if (response.status === 200) {
+                    setData(response.data);
+                    setIsLoading(false);
+                } else {    
+                    alert('Request failed with status: ' + response.status);
+                }
             }
-            setIsLoading(false);
+        } catch (error) {
+            alert(error.message);
         }
     }
+
+
 
     const clearData = () => {
         setData(null);
@@ -62,7 +75,7 @@ function UploadFile() {
             return;
         }
         setIsLoading(true);
-        sendFile();
+        makePostRequest();
     }, [preview]);
 
     const onSelectFile = (files) => {
@@ -106,7 +119,7 @@ function UploadFile() {
                             </div>
                             <div className='conf'>
                                 <p>Confidence:</p>
-                                <h4>{confidence}%</h4>
+                                <h4>{data.confidence}%</h4>
                             </div>
                         </div>
                     )}
