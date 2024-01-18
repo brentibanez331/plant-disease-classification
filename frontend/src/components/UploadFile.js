@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react'
+import React, { useState, useRef, useEffect} from 'react'
 import './UploadFile.css'
 import axios from 'axios'
-import { ReactComponent as Loader } from '..\\public\\loader.svg'
+import { ReactComponent as Loader } from '../assets/loader.svg'
 
 function UploadFile() {
     const [selectedFile, setSelectedFile] = useState()

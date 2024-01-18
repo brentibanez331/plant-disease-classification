@@ -31,7 +31,7 @@ function Navbar() {
               </Link>
             </li>
             <li className='nav-item'>
-              <a href='https://github.com/brentibanez331/potato-disease-classification' target='_blank' className='nav-links' onClick={closeMobileMenu}>
+              <a href='https://github.com/brentibanez331/potato-disease-classification' target='_blank' rel="noreferrer" className='nav-links' onClick={closeMobileMenu}>
                 Code
               </a>
             </li>
