@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "775977915206",
+    "project_id": "future-graph-411205",
+    "storage_bucket": "future-graph-411205.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:775977915206:android:0e644b748d0de97797cb47",
+        "android_client_info": {
+          "package_name": "com.example.plant_disease_classifier"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpGkBcaF98c0R0ttVtQIw59MIZTMCpCLw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
-import 'dart:typed_data';
-import 'dart:convert';
-import 'package:image_picker/image_picker.dart';
-import 'package:http/http.dart' as http;
-import 'dart:io';
-import 'dart:developer' as dev_log;
-import 'package:image/image.dart' as img;
+import 'package:firebase_core/firebase_core.dart';
+import 'package:plant_disease_classifier/screens/authenticate/login.dart';
+import 'firebase_options.dart';
+import 'package:plant_disease_classifier/services/auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:plant_disease_classifier/screens/home/home.dart';
+// import 'package:animated_splash_screen/animated_splash_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -18,123 +22,54 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
+        title: 'Phone Auth Tutorial',
+        theme: ThemeData(
+          // This is the theme of your application.
+          //
+          // TRY THIS: Try running your application with "flutter run". You'll see
+          // the application has a blue toolbar. Then, without quitting the app,
+          // try changing the seedColor in the colorScheme below to Colors.green
+          // and then invoke "hot reload" (save your changes or press the "hot
+          // reload" button in a Flutter-supported IDE, or press "r" if you used
+          // the command line to start the app).
+          //
+          // Notice that the counter didn't reset back to zero; the application
+          // state is not lost during the reload. To reset the state, use hot
+          // restart instead.
+          //
+          // This works for code too, not just values: Most code changes can be
+          // tested with just a hot reload.
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.yellow),
+          useMaterial3: true,
+        ),
+        // home: CheckUserLoggedInOrNot()
+        home: Login());
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  File? imageFile;
-  final String endpoint =
-      'https://us-central1-future-graph-411205.cloudfunctions.net/predict';
-
+class CheckUserLoggedInOrNot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: Text(widget.title),
-          centerTitle: true,
-        ),
-        body: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (imageFile != null)
-                  Container(
-                    width: 640,
-                    height: 480,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        color: Colors.grey,
-                        image: DecorationImage(image: FileImage(imageFile!)),
-                        border: Border.all(width: 8, color: Colors.black12),
-                        borderRadius: BorderRadius.circular(12.0)),
-                  )
-                else
-                  Container(
-                    width: 640,
-                    height: 480,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        color: Colors.grey,
-                        border: Border.all(width: 8, color: Colors.black12),
-                        borderRadius: BorderRadius.circular(12.0)),
-                    child: const Text(
-                      'Image should appear here',
-                      style: TextStyle(fontSize: 26),
-                    ),
-                  ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                          onPressed: () => getImage(source: ImageSource.camera),
-                          child: const Text('Capture image',
-                              style: TextStyle(fontSize: 18))),
-                    ),
-                    const SizedBox(
-                      width: 20,
-                    ),
-                    Expanded(
-                      child: ElevatedButton(
-                          onPressed: () =>
-                              getImage(source: ImageSource.gallery),
-                          child: const Text('Select Image',
-                              style: TextStyle(fontSize: 18))),
-                    )
-                  ],
-                )
-              ],
-            )));
-  }
-
-  void getImage({required ImageSource source}) async {
-    final file = await ImagePicker().pickImage(source: source);
-    if (file?.path != null) {
-      setState(() {
-        // imageFile = File(file!.path);
-        sendPredictionRequest(file!.path);
-      });
-    }
-  }
-
-  void sendPredictionRequest(String imagePath) async {
-    List<int> imageBytes = await File(imagePath).readAsBytes();
-    Future
-
-    String jsonString = json.encode(jsonData);
-    dev_log.log(jsonString);
-
-    final response = await http.post(
-      Uri.parse(endpoint),
-      headers: {
-        'Content-Type': 'application/json',
+    return StreamBuilder<User?>(
+      stream: AuthService.authStateChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        } else if (snapshot.hasError) {
+          return Scaffold(
+            body: Center(child: Text('Error: ${snapshot.error}')),
+          );
+        } else {
+          final user = snapshot.data;
+          if (user != null) {
+            return HomePage();
+          } else {
+            return Login();
+          }
+        }
       },
-      body: jsonString,
     );
-
-    if (response.statusCode == 200) {
-      dev_log.log(response.body);
-    } else {
-      dev_log.log('Prediction request failed: ${response.statusCode}');
-    }
   }
 }
