@@ -282,9 +282,10 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                                   child: const Text("Verify OTP"),
                                 ),
                               ),
-                              Row(
+                              Center(
+                                  child: Row(
                                 children: [Text("Already have an account?")],
-                              )
+                              )),
                             ],
                           )),
                     );

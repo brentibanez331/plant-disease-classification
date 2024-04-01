@@ -115,7 +115,8 @@ function UploadFile() {
                         <div className='result-container'>
                             <div className='label'>
                                 <p>Label:</p>
-                                <h4>{data.class}</h4>
+                                <h4>{data.plant}</h4>
+                                <h4>{data.status}</h4>
                             </div>
                             <div className='conf'>
                                 <p>Confidence:</p>
