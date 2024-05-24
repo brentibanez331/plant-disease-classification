@@ -34,6 +34,7 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
     await Future.delayed(const Duration(seconds: 2));
 
     // Navigate to the main screen or any other screen
+    // ignore: use_build_context_synchronously
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const Login()),

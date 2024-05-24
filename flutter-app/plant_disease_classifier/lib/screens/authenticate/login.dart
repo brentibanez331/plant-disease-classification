@@ -35,7 +35,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
 
     _controller_logo = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 500),
     );
 
     _animationLogoSize =
@@ -116,13 +116,14 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                                   top: Radius.circular(50.0))),
                           child: Column(
                             children: [
-                              Text("Welcome Back!",
+                              const Text("Welcome Back!",
                                   style: TextStyle(
                                       fontSize: 36,
                                       fontWeight: FontWeight.w600)),
-                              Text("Enter your phone number to get started",
+                              const Text(
+                                  "Enter your phone number to get started",
                                   style: TextStyle(fontSize: 16)),
-                              SizedBox(height: 50),
+                              const SizedBox(height: 50),
                               Row(
                                 children: [
                                   Expanded(
@@ -283,9 +284,15 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                                 ),
                               ),
                               Center(
-                                  child: Row(
-                                children: [Text("Already have an account?")],
-                              )),
+                                  child: Container(
+                                      padding: const EdgeInsets.only(top: 10),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text("Already have an account?")
+                                        ],
+                                      ))),
                             ],
                           )),
                     );

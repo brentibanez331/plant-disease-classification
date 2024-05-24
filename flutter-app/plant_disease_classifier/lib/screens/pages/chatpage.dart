@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 // import 'package:flutter_gemini_bot/models/chat_model.dart';
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:http/http.dart' as http;
-import 'dart:developer' as dev_log;
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
