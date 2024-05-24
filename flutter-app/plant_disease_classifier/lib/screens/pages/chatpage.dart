@@ -72,8 +72,7 @@ class _ChatPageState extends State<ChatPage> {
 
   List<ChatMessage> allMessages = [];
 
-  final url =
-      'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=AIzaSyCExCx3dKC37bbQwbnlJ_Ij7YG-3k1kwIo';
+  // API KEY HERE
 
   final header = {'Content-Type': 'application/json'};
 
