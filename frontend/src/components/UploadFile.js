@@ -140,7 +140,7 @@ function UploadFile() {
                     <button onClick={() => inputRef.current.click()}>
                         <div className='file-upload' onDragOver={handleDragOver} onDrop={handleDrop}>
                             <i className='fa-solid fa-arrow-up-from-bracket'></i>
-                            <h1 className='drag-and-drop'>Drag and Drop an Image of a Potato Plant Leaf</h1>
+                            <h1 className='drag-and-drop'>Drag and Drop an Image of a Corn Plant Leaf</h1>
                             <p>Or</p>
                             <h1 className='choose-file'>Choose File</h1>
                         </div>
